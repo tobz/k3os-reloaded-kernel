@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e
+
+# Common build directories.
+SOURCE_DIR=/source
+DOWNLOAD_DIR=/usr/src/downloads
+BUILD_ROOT_DIR=/usr/src/build
+KERNEL_BUILD_DIR="${BUILD_ROOT_DIR}/kernel/"
+PATCHES_DIR="${SOURCE_DIR}/patches"
+OUTPUT_DIR=/dist
+
+export SOURCE_DIR DOWNLOAD_DIR BUILD_ROOT_DIR KERNEL_BUILD_DIR PATCHES_DIR OUTPUT_DIR
+
+# Add the `-dirty` suffix if we're not building from a pristine refspec.
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    DIRTY="-dirty"
+fi
+
+# If VERSION is empty, calculate the version based on the current commit/tag, and whether or not the
+# repository is in a "dirty" state.
+COMMIT=$(git rev-parse --short HEAD)
+GIT_TAG=$(git tag -l --contains HEAD | head -n 1)
+
+if [ -z "$VERSION" ]; then
+    if [[ -z "$DIRTY" && -n "$GIT_TAG" ]]; then
+        VERSION=$GIT_TAG
+    else
+        VERSION="${COMMIT}${DIRTY}"
+    fi
+fi
+
+export VERSION COMMIT GIT_TAG DIRTY
+
+# TODO: Can we actually delete this? :thinkies:
+export SUFFIX=""
+if [ -n "${ARCH}" ] && [ "${ARCH}" != "amd64" ]; then
+    SUFFIX="_${ARCH}"
+fi

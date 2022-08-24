@@ -1,32 +1,40 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-source $(dirname $0)/version
-cd $(dirname $0)/..
+# Pull in the common helpers and reorient ourselves to the root of the repository.
+source /source/scripts/common
 
-set -x
+# Establish some intermediate directories we'll use to extract the kernel sources and firmware,
+# before we move them into the build root where we can actually build the kernel.
+mkdir -p ${DOWNLOAD_DIR} ${BUILD_ROOT_DIR} ${KERNEL_BUILD_DIR}
 
-mkdir -p ${DOWNLOADS}/kernel ${DOWNLOADS}/firmware
+# Download the kernel sources and firmware.
+pushd ${DOWNLOAD_DIR}
+apt-get --assume-yes download ${LINUX_FIRMWARE} ${LINUX_SOURCE}
+mv -f linux-firmware* ubuntu-firmware.deb
+mv -f linux-source* ubuntu-kernel.deb
+popd
 
-# kernel
-mkdir -p build/kernel
-dpkg-deb -x ${DOWNLOADS}/ubuntu-kernel.deb ${DOWNLOADS}/kernel
-rsync -a ${DOWNLOADS}/kernel/usr/src/linux-source-*/debian* ./build/kernel/
-tar xf ${DOWNLOADS}/kernel/usr/src/linux-source-*/linux-source*.tar.bz2 -C ./build/kernel/. --strip-components=1
+# Extract the kernel sources.
+#
+# We put the sources in a nested directory within the build root because the Debian/Ubuntu kernel
+# building scripts will emit DEB packages of the resulting artifacts at the parent directory of
+# where the sources are built, so this ensures the DEB packages land in build root, unentangled from
+# the kernel sources themselves.
+mkdir -p ${KERNEL_BUILD_DIR}
+dpkg-deb -x ${DOWNLOAD_DIR}/ubuntu-kernel.deb ${KERNEL_BUILD_DIR}
+rsync -a ${KERNEL_BUILD_DIR}/usr/src/linux-source-*/debian* ${KERNEL_BUILD_DIR}
+tar xf ${KERNEL_BUILD_DIR}/usr/src/linux-source-*/linux-source*.tar.bz2 -C ${KERNEL_BUILD_DIR} --strip-components=1
 
-## firmware
-#mkdir -p build/firmware
-#dpkg-deb -x ${DOWNLOADS}/ubuntu-firmware.deb ${DOWNLOADS}/firmware
-#rsync -a ${DOWNLOADS}/firmware/lib/firmware/* ./build/firmware/
-
-# patches
+# If we've been instructed to not apply patches (NOPATCHES) then we're done here.
 if [ -n "${NOPATCHES}" ]; then
     exit 0
 fi
-PATCHES_DIR=$(pwd)/patches
-pushd build/kernel
+
+# Navigate to the kernel source directory, and apply any necessary patches.
+pushd ${KERNEL_BUILD_DIR}
 for p in `find ${PATCHES_DIR} -name "*.patch"`; do
-    echo "applying $p"
-    patch -p1 -i $p
+    echo "[*] Applying patch '$p'..."
+    patch --quiet -p1 -i $p
 done
 popd

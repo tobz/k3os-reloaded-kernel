@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-source $(dirname $0)/version
-cd $(dirname $0)/..
+# Pull in the common helpers and reorient ourselves to the root of the repository.
+source /source/scripts/common
 
-
+# Builds and packages the kernel image, headers, and firmware.
 ./scripts/prepare
 ./scripts/build
 ./scripts/package

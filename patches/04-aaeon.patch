@@ -1,0 +1,86 @@
+diff -urbB kernel.unpatched/debian.master/config/annotations kernel.aaeon/debian.master/config/annotations
+--- kernel.unpatched/debian.master/config/annotations	2021-04-14 16:35:30.000000000 +0000
++++ kernel.aaeon/debian.master/config/annotations	2021-06-02 23:12:57.975350748 +0000
+@@ -1962,7 +1962,6 @@
+ CONFIG_GPIO_EM                                  note<h/w not encounted>
+ 
+ # Menu: Device Drivers >> GPIO Support >> PCI GPIO expanders
+-CONFIG_GPIO_AAEON                               policy<{'amd64': 'm'}>
+ CONFIG_GPIO_AMD8111                             policy<{'amd64': 'm'}>
+ CONFIG_GPIO_BT8XX                               policy<{'s390x': 'm'}>
+ CONFIG_GPIO_MLXBF                               policy<{'arm64': 'm'}>
+@@ -2856,7 +2855,6 @@
+ # Menu: Device Drivers >> Hardware Monitoring support
+ CONFIG_HWMON                                    policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 's390x': 'n'}>
+ CONFIG_HWMON_DEBUG_CHIP                         policy<{'amd64': 'n', 'arm64': 'n', 'armhf': 'n', 'ppc64el': 'n'}>
+-CONFIG_SENSORS_AAEON                            policy<{'amd64': 'm'}>
+ CONFIG_SENSORS_ABITUGURU                        policy<{'amd64': 'm'}>
+ CONFIG_SENSORS_ABITUGURU3                       policy<{'amd64': 'm'}>
+ CONFIG_SENSORS_AD7314                           policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'ppc64el': 'm'}>
+@@ -4213,7 +4211,6 @@
+ 
+ # Menu: Device Drivers >> LED Support
+ CONFIG_NEW_LEDS                                 policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y', 's390x': 'n'}>
+-CONFIG_LEDS_AAEON                               policy<{'amd64': 'm'}>
+ 
+ # Menu: Device Drivers >> LED Support >> LED Class Support
+ CONFIG_LEDS_CLASS                               policy<{'amd64': 'y', 'arm64': 'y', 'armhf': 'y', 'ppc64el': 'y'}>
+@@ -4977,7 +4974,6 @@
+ CONFIG_MFD_KHADAS_MCU                           policy<{'arm64': 'm', 'armhf': 'm'}>
+ CONFIG_MFD_ACER_A500_EC                         policy<{'armhf-generic': 'm'}>
+ CONFIG_MFD_QCOM_PM8008                          policy<{'arm64': 'm', 'armhf': 'm', 'ppc64el': 'm'}>
+-CONFIG_MFD_AAEON                                policy<{'amd64': 'm'}>
+ CONFIG_MFD_VEXPRESS_SYSREG                      policy<{'arm64': 'y', 'armhf': 'y'}>
+ CONFIG_RAVE_SP_CORE                             policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'ppc64el': 'm', 's390x': 'n'}>
+ CONFIG_MFD_INTEL_M10_BMC                        policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'ppc64el': 'm'}>
+@@ -10485,7 +10481,6 @@
+ CONFIG_INTEL_MEI_WDT                            policy<{'amd64': 'm'}>
+ CONFIG_NI903X_WDT                               policy<{'amd64': 'm'}>
+ CONFIG_NIC7018_WDT                              policy<{'amd64': 'm'}>
+-CONFIG_AAEON_IWMI_WDT                           policy<{'amd64': 'm'}>
+ CONFIG_BCM2835_WDT                              policy<{'arm64': 'm'}>
+ CONFIG_BCM7038_WDT                              policy<{'arm64': 'm'}>
+ CONFIG_MEN_A21_WDT                              policy<{'amd64': 'm', 'arm64': 'm', 'armhf': 'm', 'ppc64el': 'm', 's390x': 'm'}>
+diff -urbB kernel.unpatched/debian.master/config/config.common.ubuntu kernel.aaeon/debian.master/config/config.common.ubuntu
+--- kernel.unpatched/debian.master/config/config.common.ubuntu	2021-04-14 16:35:30.000000000 +0000
++++ kernel.aaeon/debian.master/config/config.common.ubuntu	2021-06-02 23:12:35.219507534 +0000
+@@ -34,7 +34,6 @@
+ CONFIG_9P_FS_POSIX_ACL=y
+ CONFIG_9P_FS_SECURITY=y
+ # CONFIG_A11Y_BRAILLE_CONSOLE is not set
+-CONFIG_AAEON_IWMI_WDT=m
+ CONFIG_ABP060MG=m
+ CONFIG_ACENIC=m
+ # CONFIG_ACENIC_OMIT_TIGON_I is not set
+@@ -3943,7 +3942,6 @@
+ CONFIG_GPIO_104_IDI_48=m
+ CONFIG_GPIO_74X164=m
+ CONFIG_GPIO_74XX_MMIO=m
+-CONFIG_GPIO_AAEON=m
+ CONFIG_GPIO_ACPI=y
+ CONFIG_GPIO_ADNP=m
+ CONFIG_GPIO_ADP5520=m
+@@ -5631,7 +5629,6 @@
+ CONFIG_LD_ORPHAN_WARN=y
+ CONFIG_LD_VERSION=23800
+ CONFIG_LEDS_88PM860X=m
+-CONFIG_LEDS_AAEON=m
+ CONFIG_LEDS_AAT1290=m
+ CONFIG_LEDS_ACER_A500=m
+ CONFIG_LEDS_ADP5520=m
+@@ -6073,7 +6070,6 @@
+ CONFIG_MESON_WATCHDOG=m
+ CONFIG_MESSAGE_LOGLEVEL_DEFAULT=4
+ CONFIG_MFD_88PM860X=y
+-CONFIG_MFD_AAEON=m
+ CONFIG_MFD_AAT2870_CORE=y
+ # CONFIG_MFD_AC100 is not set
+ CONFIG_MFD_ACER_A500_EC=m
+@@ -9395,7 +9391,6 @@
+ CONFIG_SELECT_MEMORY_MODEL=y
+ CONFIG_SENSIRION_SGP30=m
+ CONFIG_SENSIRION_SGP40=m
+-CONFIG_SENSORS_AAEON=m
+ CONFIG_SENSORS_ABITUGURU=m
+ CONFIG_SENSORS_ABITUGURU3=m
+ CONFIG_SENSORS_ACPI_POWER=m

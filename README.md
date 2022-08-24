@@ -1,7 +1,14 @@
-# The Kernel of K3OS
-This repo can build the kernel and package the firmware.
+# k3OS Reloaded Kernels
 
-# License
+Automated kernel builds for k3OS Reloaded.
+
+## details
+
+- Kernels are based on the source/firmware from Ubuntu LTS releases only.
+- Only the necessary changes to support k3OS are made.
+
+## license
+
 Copyright (c) 2019-2020 [Rancher Labs, Inc.](http://rancher.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");

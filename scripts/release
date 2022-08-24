@@ -1,18 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-source $(dirname $0)/version
-cd $(dirname $0)/..
+# Pull in the common helpers and reorient ourselves to the root of the repository.
+source /source/scripts/common
 
-./scripts/ci
+# Build and package the kernel image, headers, and firmware first.
+/source/scripts/ci
 
 echo
-echo "to publish release to github, run dist/publish.sh"
+echo "[*] Generating publish script for version '${VERSION}'..."
 
-echo "#!/bin/sh"> dist/publish.sh
-#echo "hub release create -t ${COMMIT} -m v${RELEASE_VERSION} v${RELEASE_VERSION}" >> dist/publish.sh
-echo "for f in \$(ls ./dist/artifacts) ; do" >> dist/publish.sh
-echo "   hub release edit -m ${VERSION} -a ./dist/artifacts/\${f} ${VERSION}" >> dist/publish.sh
-echo "done" >> dist/publish.sh
+cat << EOF > ${OUTPUT_DIR}/publish.sh
+#!/usr/bin/env bash
+for artifact in \$(ls ./dist/artifacts) ; do
+    hub release edit -m ${VERSION} -a ./dist/artifacts/\${artifact} ${VERSION}
+done
+EOF
 
-chmod 755 dist/publish.sh
+chmod +x ${OUTPUT_DIR}/publish.sh
+
+echo "Publish script complete! Run \`dist/publish.sh\` to upload the release to Github."

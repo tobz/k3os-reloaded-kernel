@@ -1,5 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -e
 
-rm -rf $(dirname "$0")/../build
-rm -rf $(dirname "$0")/../dist
+# Pull in the common helpers and reorient ourselves to the root of the repository.
+source /source/scripts/common
+
+# Clean up any build artifacts, as well as any intermediate Dockerfile output from `dapper`.
+rm -rf ${BUILD_ROOT_DIR} ${OUTPUT_DIR}
 rm -f $(dirname "$0")/../Dockerfile.dapper[0-9]*

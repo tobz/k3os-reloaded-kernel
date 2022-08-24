@@ -1,38 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-source $(dirname $0)/version
-cd $(dirname $0)/..
+# Pull in the common helpers and reorient ourselves to the root of the repository.
+source /source/scripts/common
 
-GENERIC_HEADERS_DIR=dist/generic/headers
-GENERIC_MAIN_DIR=dist/generic/main
-GENERIC_EXTRA_DIR=dist/generic/modules-extra
+# Establish some intermediate directories where we'll reorganized the files that the normal
+# Debian/Ubuntu kernel build process gave us into more logical groupings.
+GENERIC_HEADERS_DIR="${OUTPUT_DIR}/generic/headers"
+GENERIC_MAIN_DIR="${OUTPUT_DIR}/generic/main"
+GENERIC_EXTRA_DIR="${OUTPUT_DIR}/generic/modules-extra"
+ARTIFACT_DIR="${OUTPUT_DIR}/artifacts"
 
-mkdir -p ${GENERIC_HEADERS_DIR} ${GENERIC_MAIN_DIR} ${GENERIC_EXTRA_DIR}
+mkdir -p ${GENERIC_HEADERS_DIR} ${GENERIC_MAIN_DIR} ${GENERIC_EXTRA_DIR} ${ARTIFACT_DIR}
 
-# headers
-sh -xc "dpkg-deb -x build/linux-headers-5.*generic*.deb ${GENERIC_HEADERS_DIR}/"
-sh -xc "dpkg-deb -x build/linux-headers-5.*all.deb ${GENERIC_HEADERS_DIR}/"
+# Extract the kernel headers.
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*generic*.deb ${GENERIC_HEADERS_DIR}/
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*all.deb ${GENERIC_HEADERS_DIR}/
 
-# main modules and vmlinuz and firmware
-sh -xc "dpkg-deb -x build/linux-image-unsigned-5.*.deb ${GENERIC_MAIN_DIR}"
-sh -xc "dpkg-deb -x build/linux-modules-5.*.deb ${GENERIC_MAIN_DIR}"
-sh -xc "dpkg-deb -x ${DOWNLOADS}/ubuntu-firmware.deb ${GENERIC_MAIN_DIR}"
+# Extract the kernel image, modules, and firmwre.
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-image-unsigned-5.*.deb ${GENERIC_MAIN_DIR}
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-5.*.deb ${GENERIC_MAIN_DIR}
+dpkg-deb -x ${DOWNLOAD_DIR}/ubuntu-firmware.deb ${GENERIC_MAIN_DIR}
 
-# extra modules
-sh -xc "dpkg-deb -x build/linux-modules-extra-5.*.deb ${GENERIC_EXTRA_DIR}"
+# Extract any extra kernel modules.
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-extra-5.*.deb ${GENERIC_EXTRA_DIR}
 
-# package artifacts
-mkdir -p dist/artifacts
-
+# Now repackage these files into tarballs, one for each grouping.
 pushd ${GENERIC_HEADERS_DIR}
-time sh -xc "tar cJf ../../artifacts/kernel-headers-generic_${ARCH}.tar.xz ."
+tar cJf ${ARTIFACT_DIR}/kernel-headers-generic_${ARCH}.tar.xz .
 popd
 
 pushd ${GENERIC_MAIN_DIR}
-time sh -xc "tar cJf ../../artifacts/kernel-generic_${ARCH}.tar.xz ."
+tar cJf ${ARTIFACT_DIR}/kernel-generic_${ARCH}.tar.xz .
 popd
 
 pushd ${GENERIC_EXTRA_DIR}
-time sh -xc "tar cJf ../../artifacts/kernel-extra-generic_${ARCH}.tar.xz ."
+tar cJf ${ARTIFACT_DIR}/kernel-extra-generic_${ARCH}.tar.xz .
 popd
