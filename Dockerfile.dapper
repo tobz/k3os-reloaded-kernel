@@ -34,7 +34,7 @@ RUN apt-get --assume-yes update \
 ENV DAPPER_ENV VERSION DEBUG
 ENV DAPPER_DOCKER_SOCKET true
 ENV DAPPER_SOURCE /source
-ENV DAPPER_OUTPUT ./dist ./build
+ENV DAPPER_OUTPUT ./dist
 ENV EDITOR=vim \
     PAGER=less \
     SHELL=/bin/bash

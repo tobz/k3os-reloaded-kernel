@@ -26,6 +26,8 @@ dpkg-deb -x ${DOWNLOAD_DIR}/ubuntu-firmware.deb ${GENERIC_MAIN_DIR}
 dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-extra-5.*.deb ${GENERIC_EXTRA_DIR}
 
 # Now repackage these files into tarballs, one for each grouping.
+export XZ_DEFAULTS="-T 0"
+
 pushd ${GENERIC_HEADERS_DIR}
 tar cJf ${ARTIFACT_DIR}/kernel-headers-generic_${ARCH}.tar.xz .
 popd
