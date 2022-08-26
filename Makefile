@@ -27,4 +27,4 @@ shell-bind: .dapper
 # Cleans all build artifacts and output.
 clean:
 	@rm -rf dist
-	@rm -f Dockerfile.dapper*
+	@rm -f Dockerfile.dapper[0-9]*
