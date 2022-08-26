@@ -2,14 +2,17 @@
 set -e
 
 # Common build directories.
-SOURCE_DIR=/source
+SOURCE_DIR=$(dirname $0)
+SOURCE_DIR=$(readlink -f "${SOURCE_DIR}/..")
+SCRIPT_DIR="${SOURCE_DIR}/scripts"
 DOWNLOAD_DIR=/usr/src/downloads
 BUILD_ROOT_DIR=/usr/src/build
 KERNEL_BUILD_DIR="${BUILD_ROOT_DIR}/kernel/"
 PATCHES_DIR="${SOURCE_DIR}/patches"
 OUTPUT_DIR="${SOURCE_DIR}/dist"
+ARTIFACT_DIR="${OUTPUT_DIR}/artifacts"
 
-export SOURCE_DIR DOWNLOAD_DIR BUILD_ROOT_DIR KERNEL_BUILD_DIR PATCHES_DIR OUTPUT_DIR
+export SOURCE_DIR SCRIPT_DIR DOWNLOAD_DIR BUILD_ROOT_DIR KERNEL_BUILD_DIR PATCHES_DIR OUTPUT_DIR ARTIFACT_DIR
 
 # Add the `-dirty` suffix if we're not building from a pristine refspec.
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then

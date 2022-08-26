@@ -2,7 +2,7 @@
 set -e
 
 # Pull in the common helpers and reorient ourselves to the root of the repository.
-source /source/scripts/common
+source $(dirname $0)/common
 
 # Establish some intermediate directories we'll use to extract the kernel sources and firmware,
 # before we move them into the build root where we can actually build the kernel.
@@ -10,7 +10,7 @@ mkdir -p ${DOWNLOAD_DIR} ${BUILD_ROOT_DIR} ${KERNEL_BUILD_DIR}
 
 # Download the kernel sources and firmware.
 pushd ${DOWNLOAD_DIR}
-apt-get --assume-yes download ${LINUX_FIRMWARE} ${LINUX_SOURCE}
+fakeroot apt-get --assume-yes download ${LINUX_FIRMWARE} ${LINUX_SOURCE}
 mv -f linux-firmware* ubuntu-firmware.deb
 mv -f linux-source* ubuntu-kernel.deb
 popd

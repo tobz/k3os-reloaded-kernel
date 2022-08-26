@@ -2,40 +2,37 @@
 set -e
 
 # Pull in the common helpers and reorient ourselves to the root of the repository.
-source /source/scripts/common
+source $(dirname $0)/common
 
 # Establish some intermediate directories where we'll reorganized the files that the normal
 # Debian/Ubuntu kernel build process gave us into more logical groupings.
 GENERIC_HEADERS_DIR="${OUTPUT_DIR}/generic/headers"
 GENERIC_MAIN_DIR="${OUTPUT_DIR}/generic/main"
 GENERIC_EXTRA_DIR="${OUTPUT_DIR}/generic/modules-extra"
-ARTIFACT_DIR="${OUTPUT_DIR}/artifacts"
 
-mkdir -p ${GENERIC_HEADERS_DIR} ${GENERIC_MAIN_DIR} ${GENERIC_EXTRA_DIR} ${ARTIFACT_DIR}
+mkdir -p "${GENERIC_HEADERS_DIR}" "${GENERIC_MAIN_DIR}" "${GENERIC_EXTRA_DIR}" "${ARTIFACT_DIR}"
 
 # Extract the kernel headers.
-dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*generic*.deb ${GENERIC_HEADERS_DIR}/
-dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*all.deb ${GENERIC_HEADERS_DIR}/
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*generic*.deb "${GENERIC_HEADERS_DIR}/"
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-headers-5.*all.deb "${GENERIC_HEADERS_DIR}/"
 
 # Extract the kernel image, modules, and firmwre.
-dpkg-deb -x ${BUILD_ROOT_DIR}/linux-image-unsigned-5.*.deb ${GENERIC_MAIN_DIR}
-dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-5.*.deb ${GENERIC_MAIN_DIR}
-dpkg-deb -x ${DOWNLOAD_DIR}/ubuntu-firmware.deb ${GENERIC_MAIN_DIR}
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-image-unsigned-5.*.deb "${GENERIC_MAIN_DIR}"
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-5.*.deb "${GENERIC_MAIN_DIR}"
+dpkg-deb -x ${DOWNLOAD_DIR}/ubuntu-firmware.deb "${GENERIC_MAIN_DIR}"
 
 # Extract any extra kernel modules.
-dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-extra-5.*.deb ${GENERIC_EXTRA_DIR}
+dpkg-deb -x ${BUILD_ROOT_DIR}/linux-modules-extra-5.*.deb "${GENERIC_EXTRA_DIR}"
 
 # Now repackage these files into tarballs, one for each grouping.
-export XZ_DEFAULTS="-T 0"
-
-pushd ${GENERIC_HEADERS_DIR}
-tar cJf ${ARTIFACT_DIR}/kernel-headers-generic_${ARCH}.tar.xz .
+pushd "${GENERIC_HEADERS_DIR}"
+XZ_DEFAULTS="-T 0" tar cJf "${ARTIFACT_DIR}/kernel-headers-generic_${ARCH}.tar.xz" .
 popd
 
-pushd ${GENERIC_MAIN_DIR}
-tar cJf ${ARTIFACT_DIR}/kernel-generic_${ARCH}.tar.xz .
+pushd "${GENERIC_MAIN_DIR}"
+XZ_DEFAULTS="-T 0" tar cJf "${ARTIFACT_DIR}/kernel-generic_${ARCH}.tar.xz" .
 popd
 
-pushd ${GENERIC_EXTRA_DIR}
-tar cJf ${ARTIFACT_DIR}/kernel-extra-generic_${ARCH}.tar.xz .
+pushd "${GENERIC_EXTRA_DIR}"
+XZ_DEFAULTS="-T 0" tar cJf "${ARTIFACT_DIR}/kernel-extra-generic_${ARCH}.tar.xz" .
 popd

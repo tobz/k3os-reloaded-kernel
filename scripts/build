@@ -2,15 +2,15 @@
 set -e
 
 # Pull in the common helpers and reorient ourselves to the root of the repository.
-source /source/scripts/common
+source $(dirname $0)/common
 
 # Create some necessary directories prior to building.
-mkdir -p ${KERNEL_BUILD_DIR}/debian/stamps
+mkdir -p "${KERNEL_BUILD_DIR}/debian/stamps"
 chmod a+x ${KERNEL_BUILD_DIR}/debian*/scripts/*
 chmod a+x ${KERNEL_BUILD_DIR}/debian*/scripts/misc/*
 
 # Now build the actual kernel.
-pushd ${KERNEL_BUILD_DIR}
+pushd "${KERNEL_BUILD_DIR}"
 unset ARCH
 fakeroot debian/rules clean
 fakeroot debian/rules binary-headers binary-generic \
