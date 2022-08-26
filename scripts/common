@@ -2,9 +2,9 @@
 set -e
 
 # Common build directories.
-SOURCE_DIR=$(dirname $0)
-SOURCE_DIR=$(readlink -f "${SOURCE_DIR}/..")
-SCRIPT_DIR="${SOURCE_DIR}/scripts"
+SCRIPT_DIR=$(dirname $0)
+SCRIPT_DIR=$(readlink -f ${SCRIPT_DIR})
+SOURCE_DIR="${SCRIPT_DIR}/.."
 DOWNLOAD_DIR=/usr/src/downloads
 BUILD_ROOT_DIR=/usr/src/build
 KERNEL_BUILD_DIR="${BUILD_ROOT_DIR}/kernel/"
